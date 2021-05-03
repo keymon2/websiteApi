@@ -15,21 +15,21 @@ router.post('/Group/create', (req,res)=>{
         postBoard: req.body.postBoard,
         image: req.body.image,
     },
-    (err,group)=>{
+    (err,user)=>{
         if(err) return res.status(500).send("Group 생성 실패.");
             res.status(200).send(user);
     })
 });
 
 router.get('/Group/get', function(req, res) {
-    User.find( {}, function(err, users) {
+    Group.find( {}, function(err, user) {
         if (err) return res.status(500).send("Group 전체 조회 실패.");
         res.status(200).send(users);
     });
 });
 
 router.delete('/Group/delete/:id', (req, res)=> {
-    User.findByIdAndRemove(req.params.id, function (err, user) {
+    Group.findByIdAndRemove(req.params.id, function (err, user) {
         if (err) return res.status(500).send("Group 삭제 실패");
         res.status(200).send("User "+ user.name +" 삭제됨.");
     });
