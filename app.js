@@ -4,17 +4,17 @@ import express from 'express'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
 const app = express();
-import { specs ,swaggerUi } from './swaggerDoc.js'
-
+import { options ,swaggerUi,swaggerJsdoc } from './swaggerDoc.js'
 const { PORT, MONGO_URI } = process.env;
 app.use(morgan('dev'));
-app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use('/',swaggerUi.serve, swaggerUi.setup(specs,{explorer: true}));
+//app.use(express.static('public'));
+//app.use(express.urlencoded({ extended: true }));
+//app.use(express.json());
+const specs = swaggerJsdoc(options);
+app.use('/api-docs',swaggerUi.serve, swaggerUi.setup(specs,{explorer: true}));
 
 
-
+console.log(specs)
 
 // CONNECT TO MONGODB SERVER
 mongoose

@@ -3,24 +3,24 @@ import swaggerJsdoc from "swagger-jsdoc"
 
 const options = {
     swaggerDefinition:{
-        opneapi: "3.0.0",
-        info:{
+        openapi: "3.0.0",
+        info: {
             title: " express mongodb API",
             version: "1.0.0",
-            decription: "rest api",
+            description: "rest api",
         },
-        severs:[
+        servers: [
             {
-                url: "htttp://localhost:4500"
-            }
-        ]
+                url:"http://loachost:4502/api-docs",
+            },
+        ],
     },
     apis: ["./routes/*.js"],
 };
 
-const specs = swaggerJsdoc(options);
 
 export{
     swaggerUi,
-    specs,
+    options,
+    swaggerJsdoc
 };

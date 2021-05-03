@@ -5,14 +5,29 @@ const router= express.Router();
 router.use(express.urlencoded({ extended: true }));
 
 import User from '../models/models'
-/**
-    *@swagger
-    /User:
-        post:
- */
 
-router.post('/User/create',(req,res)=>{
-    User.create({
+/**
+ * @swagger
+ *  /User:
+ *    post:
+ *      tags:
+ *      - product
+ *      description: 모든 제품 조회
+ *      produces:
+ *      - application/json
+ *      parameters:
+ *        - in: query
+ *          name: category
+ *          required: false
+ *          schema:
+ *            type: integer
+ *            description: 카테고리
+ *      responses:
+ *       200:
+ *        description: 제품 조회 성공
+ */
+router.post('/User',async (req,res)=>{
+    await User.create({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
@@ -32,23 +47,26 @@ router.post('/User/create',(req,res)=>{
     })
 });
 
-router.get('/User/get',(req,res)=>{
-    User.find({}, (err,user)=>{
+router.get('/User',async (req,res)=>{
+    await User.find({}, (err,user)=>{
         if (err) return res.status(500).send("User 전체 조회 실패.");
         res.status(200).send(users);
     });
 });
 
-router.delete('/User/delete/:id',(req,res)=>{
-    User.findByIdAndRemove(req.params.id, function (err, user) {
+router.delete('/User/:id',async (req,res)=>{
+   await User.findByIdAndRemove(req.params.id, function (err, user) {
         if (err) return res.status(500).send("User 삭제 실패");
         res.status(200).send("User "+ user.name +" 삭제됨.");
     });
 })
 
-router.put('/User/update/:id',(req,res)=>{
-    User.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, user) {
+router.put('/User/:id',async (req,res)=>{
+    await User.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, user) {
         if (err) return res.status(500).send("User 수정 실패.");
         res.status(200).send(user);
     });
 })
+
+
+module.exports = router;

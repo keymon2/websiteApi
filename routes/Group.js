@@ -3,7 +3,6 @@ import { group } from 'node:console';
 
 const router = express.Router();
 router.use(express.urlencoded({ extended: true}));
-
 import Group from '../models/models'
 
 router.post('/Group/create', (req,res)=>{
