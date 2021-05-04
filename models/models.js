@@ -1,34 +1,37 @@
-import mongoose, { mongo } from "mongoose"
+import mongoose from "mongoose"
 const { Schema } = mongoose;
 
-
-const imageSchema = new mongoose.schema({
+const passwordSchema = new mongoose.Schema({
+    password: String,
+    salt: Number
+})
+const imageSchema = new mongoose.Schema({
     src: String,
     width: Number,
     height: Number
 })
 
-const UserSchema = new mongoose.schema({
-    name: String,
-    Email: {type: String, required: true, unique: true},
-    password: String,
-    image: [imageSchema],
+const UserSchema = new mongoose.Schema({
+    name: {type:String, reuquired: true,},
+    email: {type: String, required: true,},
+    password: passwordSchema,
+    image: {type: String,required: false},
     age: Number,
     sex: String,
     adress: String,
     bio: String,
     birth: String,
     myGroup: [{type: Schema.Types.ObjectId, ref: 'Group'}],
-    posts: [PostsSchema],
-    schedule: [ScheduleSchema]
+   // posts: [PostsSchema],
+   // schedule: [ScheduleSchema]
 },{ timestamps: true});
 
 
-const GroupSchema = new mongoose.schema({
+const GroupSchema = new mongoose.Schema({
     name:String,
     bio: String,
     MyUser: [{ type: Schema.Types.ObjectId, ref: 'User'}],
-    schedule: [scheduleSchema],
+   // schedule: [scheduleSchema],
     postBoard: [{type: Schema.Types.ObjectId, ref: 'Post'}],
     image: [imageSchema],
     
@@ -40,7 +43,7 @@ const PostsSchema = new mongoose.Schema({
     content: String,
     image: [imageSchema],
     comments:[{type: Schema.Types.ObjectId, ref: 'Comment'}],
-    likes : [{tyoe: Schema.Types.ObjectId, ref: 'LikePost'}],
+    likes : [{type: Schema.Types.ObjectId, ref: 'LikePost'}],
     commnet_count: Number,
     like_count: Number,
 },{ timestamps: true})
@@ -63,14 +66,14 @@ const LikePostSchema = new mongoose.Schema({
 },{timestamps: true});
 
 
-User = mongoose.model('User',UserSchema);
-Group = mongoose.model('Group',GroupSchema);
-Post = mongoose.model('Post', PostSchema);
-Comment = mongoose.model('Comment',CommentSchema);
-LikeComment = mongoose.model('LikeComment',LikeCommentSchema);
-LikePost = mongoose.model('LikePost',LikePostSchema);
+const User = mongoose.model('User',UserSchema);
+const Group = mongoose.model('Group',GroupSchema);
+const Post = mongoose.model('Post', PostsSchema);
+const Comment = mongoose.model('Comment',CommentSchema);
+const LikeComment = mongoose.model('LikeComment',LikeCommentSchema);
+const LikePost = mongoose.model('LikePost',LikePostSchema);
 
-export default{
+export {
     User,
     Group,
     Post,

@@ -1,72 +1,62 @@
 import express from 'express'
+import hash from '../secret.js'
+
+const userRouter= express.Router();
+userRouter.use(express.urlencoded({ extended: true }));
+
+import {User} from '../models/models.js'
 
 
-const router= express.Router();
-router.use(express.urlencoded({ extended: true }));
+userRouter.post('/create',async (req,res)=>{
+   
+    const pass = hash(req.body.password)
+    
+    const user = new User();
+    user.name = req.body.name;
+    user.email = req.body.email;
+    user.password = pass;
+    user.image = req.body.image;
+    user.age = req.body.age;
+    user.sex = req.body.sex;
+    user.adress = req.body.adress;
+    user.bio = req.body.bio;
+    user.birth = req.body.birth;
+    user.myGroup = req.body.myGroup;
+    user.posts = req.body.posts;
+    user.schedule = req.body.schedule;
 
-import User from '../models/models'
-
-/**
- * @swagger
- *  /User:
- *    post:
- *      tags:
- *      - product
- *      description: 모든 제품 조회
- *      produces:
- *      - application/json
- *      parameters:
- *        - in: query
- *          name: category
- *          required: false
- *          schema:
- *            type: integer
- *            description: 카테고리
- *      responses:
- *       200:
- *        description: 제품 조회 성공
- */
-router.post('/User',async (req,res)=>{
-    await User.create({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        image: req.body.image,
-        age: req.body.age,
-        sex: req.body.sex,
-        adress: req.body.adress,
-        bio: req.body.bio,
-        birth: req.body.birth,
-        myGroup: req.body.myGroup,
-        posts: req.body.posts,
-        schedule: req.body.schedule,
-    },
-    (err,user)=>{
-        if (err) return res.status(500).send("User 생성 실패.");
-            res.status(200).send(user);
+    await user.save((err,user)=>{
+        if(err){
+            console.log(err)
+            res.send("실패")
+        }
+        res.json({message: "user created",data: user})
     })
+
 });
 
-router.get('/User',async (req,res)=>{
+userRouter.get('/findall',async (req,res)=>{
     await User.find({}, (err,user)=>{
-        if (err) return res.status(500).send("User 전체 조회 실패.");
-        res.status(200).send(users);
+        if (err) { 
+            console.log(err)
+            res.status(500).send("User 전체 조회 실패.");
+        }res.status(200).send(user);
     });
 });
 
-router.delete('/User/:id',async (req,res)=>{
-   await User.findByIdAndRemove(req.params.id, function (err, user) {
+userRouter.delete('/delete',async (req,res)=>{
+  
+   await User.findByIdAndRemove({_id: req.body.id}, function (err, user) {
         if (err) return res.status(500).send("User 삭제 실패");
         res.status(200).send("User "+ user.name +" 삭제됨.");
     });
 })
-
-router.put('/User/:id',async (req,res)=>{
-    await User.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, user) {
+userRouter.put('/update?id=',async (req,res)=>{
+    console.log(req.params);
+    await User.findByIdAndUpdate({_id: req.params.id}, req.body, {new: true}, function (err, user) {
         if (err) return res.status(500).send("User 수정 실패.");
         res.status(200).send(user);
     });
 })
 
-
-module.exports = router;
+export default  userRouter;
