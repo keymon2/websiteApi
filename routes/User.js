@@ -14,7 +14,7 @@ userRouter.post('/create',async (req,res)=>{
     const user = new User();
     user.name = req.body.name;
     user.email = req.body.email;
-    user.password = pass;
+    user.pass = pass;
     user.image = req.body.image;
     user.age = req.body.age;
     user.sex = req.body.sex;
@@ -30,7 +30,7 @@ userRouter.post('/create',async (req,res)=>{
             console.log(err)
             res.send("실패")
         }
-        res.json({message: "user created",data: user.password.password})
+        res.json({message: "user created",data: user})
     })
 
 });
@@ -47,8 +47,9 @@ userRouter.get('/findall',async (req,res)=>{
 userRouter.delete('/delete',async (req,res)=>{
   
    await User.findByIdAndRemove({_id: req.body.id}, function (err, user) {
+        
         if (err) return res.status(500).send("User 삭제 실패");
-        res.status(200).send("User "+ user.name +" 삭제됨.");
+        res.status(200).send("User "+" 삭제됨.");
     });
 })
 userRouter.put('/update?id=',async (req,res)=>{

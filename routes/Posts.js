@@ -37,7 +37,7 @@ router.get('/findall',(req,res)=>{
 router.delete('/delete',(req,res)=>{
     Posts.findByIdAndRemove({_id: req.body.id}, function (err, user) {
         if (err) return res.status(500).send("Posts 삭제 실패");
-        res.status(200).send("Posts "+ user.title +" 삭제됨.");
+        res.status(200).send("Posts "+ user.name +" 삭제됨.");
     });
 })
 

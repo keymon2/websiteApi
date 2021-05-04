@@ -14,8 +14,8 @@ const imageSchema = new mongoose.Schema({
 const UserSchema = new mongoose.Schema({
     name: {type:String, reuquired: true,},
     email: {type: String, required: true,},
-    password: {
-        pass: String,
+    pass: {
+        password: String,
         salt: String
     },
     image: {type: String,required: false},
