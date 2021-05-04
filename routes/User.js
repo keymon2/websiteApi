@@ -30,7 +30,7 @@ userRouter.post('/create',async (req,res)=>{
             console.log(err)
             res.send("실패")
         }
-        res.json({message: "user created",data: user})
+        res.json({message: "user created",data: user.password.password})
     })
 
 });
@@ -55,6 +55,7 @@ userRouter.put('/update?id=',async (req,res)=>{
     console.log(req.params);
     await User.findByIdAndUpdate({_id: req.params.id}, req.body, {new: true}, function (err, user) {
         if (err) return res.status(500).send("User 수정 실패.");
+        console.log(user);
         res.status(200).send(user);
     });
 })
