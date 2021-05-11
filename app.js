@@ -3,24 +3,24 @@ dotenv.config();
 import express from 'express'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
+import passport from 'passport'
+import {authenticateJwt} from "./secret.js"
+import cors from "cors"
 const app = express();
+
 //import { options ,swaggerUi,swaggerJsdoc } from './swaggerDoc.js'
 const { PORT, MONGO_URI } = process.env;
 app.use(morgan('dev'));
 app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-// specs = swaggerJsdoc(options);
-//app.use('/api-docs',swaggerUi.serve, swaggerUi.setup(specs,{explorer: true}));
+app.use(cors());
+app.use(authenticateJwt);
+import apiRouter from './routes/root.js'
 
-import userRouter from "./routes/User.js"
-import groupRouter from "./routes/Group.js"
-import authRouter from "./routes/Auth.js"
+app.use('/api', apiRouter);
 
 
-app.use('/Auth',authRouter);
-app.use('/Group',groupRouter);
-app.use('/User',userRouter);
 
 
 // CONNECT TO MONGODB SERVER

@@ -1,29 +1,35 @@
 import mongoose from "mongoose"
 const { Schema } = mongoose;
 
-const passwordSchema = new mongoose.Schema({
-    password: String,
-    salt: Number
-})
+
 const imageSchema = new mongoose.Schema({
     src: String,
     width: Number,
     height: Number
 })
 
+const AlbumSchema = new mongoose.Schema({
+    src: [{type: imageSchema}]
+})
+
 const UserSchema = new mongoose.Schema({
-    name: {type:String, reuquired: true,},
-    email: {type: String, required: true,},
-    pass: {
-        password: String,
-        salt: String
-    },
-    image: {type: String,required: false},
+    name: {type:String, required: true,},
+    firstname: String,
+    lastname: String,
+    email: {type: String, required: true, unique: true},
+    pass: {type: String, required: true, unique: true},
+    salt: {type: String, required: true, unique: true},
+    image: {type: imageSchema,required: false},
+    album:  {type: Schema.Types.ObjectId, ref:'Album'} ,
     age: Number,
+    city: String,
+    country: String,
+    phone: String,
     sex: String,
     adress: String,
     bio: String,
     birth: String,
+
     myGroup: [{type: Schema.Types.ObjectId, ref: 'Group'}],
    // posts: [PostsSchema],
    // schedule: [ScheduleSchema]
@@ -75,12 +81,13 @@ const Post = mongoose.model('Post', PostsSchema);
 const Comment = mongoose.model('Comment',CommentSchema);
 const LikeComment = mongoose.model('LikeComment',LikeCommentSchema);
 const LikePost = mongoose.model('LikePost',LikePostSchema);
-
+const Album = mongoose.model('Album', AlbumSchema )
 export {
     User,
     Group,
     Post,
     Comment,
     LikeComment,
-    LikePost
+    LikePost,
+    Album
 }
