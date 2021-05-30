@@ -2,14 +2,59 @@ import express from 'express'
 
 
 const albumRouter = express.Router();
-router.use(express.urlencoded({ extended: true}));
+albumRouter.use(express.urlencoded({ extended: true}));
 
-import Album from '../models/models.js'
-import User from '../models/models.js'
+import {Album, User,Image} from '../models/models.js'
 
-AlbumRouter.post('/create',async(req,res)=>{
+
+albumRouter.get('/find',async(req,res)=>{
+    if( !req.user ){
+        return res.status(204).send({success: false})
+    }
+    const user = req.user
+    const album = await Album.findById({_id: user.album })
+    return res.status(200).send({data: album});
     
-    const user = async User.find()
+})
 
+albumRouter.get('/findall',async (req,res)=>{
+    await Album.find({}, (err,album)=>{
+        if (err) { 
+            console.log(err)
+            res.status(500).send("album 전체 조회 실패.");
+        }res.status(200).send(album);
+    });
+});
+
+albumRouter.post('/insert', async(req,res) => {
+    if( !req.user ){
+        return res.status(204).send({success: false})
+    }
+    const user = req.user
+
+    try{
+        const album = await Album.findById({_id: user.album })
+        const image = req.body.image
+        image.map( img => 
+            album.image.push(new Image({
+                src: img.src,
+                location: img.location
+            }) )
+            )
+        album.save((err)=>{
+            if(!err){
+                console.log('saved');
+                return res.status(200).send({success: true, save: true});
+            }
+            if(err){
+                console.log(' not save');
+                return res.status(203).send({success: true, save: false});
+            }
+            })}
+    catch(err){
+        console.log(err)
+    }
 
 })
+
+export default albumRouter;

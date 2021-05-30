@@ -52,8 +52,10 @@ const jwtOptions = {
 
 export const authenticateJwt= async(req,res,next) => {
     console.log(req.body)
+    
     passport.authenticate("jwt", { sessions : false },(error,user,info) => {
-        if (!user) { console.log(`"status':'fail','message'`); }
+        if (!user) { console.log(`"status':'fail','message' in authenticate`)
+         }
         if (user) {
          req.user = user;
          console.log(req.body)

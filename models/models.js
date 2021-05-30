@@ -4,12 +4,13 @@ const { Schema } = mongoose;
 
 const imageSchema = new mongoose.Schema({
     src: String,
-    width: Number,
-    height: Number
-})
+    location : String,
+
+},{ timestamps : true})
 
 const AlbumSchema = new mongoose.Schema({
-    src: [{type: imageSchema}]
+    image: [imageSchema],
+    who: {type: Schema.Types.ObjectId, ref:'User'}
 })
 
 const UserSchema = new mongoose.Schema({
@@ -19,7 +20,8 @@ const UserSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true},
     pass: {type: String, required: true, unique: true},
     salt: {type: String, required: true, unique: true},
-    image: {type: imageSchema,required: false},
+    image1: String,
+    "image2": String,
     album:  {type: Schema.Types.ObjectId, ref:'Album'} ,
     age: Number,
     city: String,
@@ -82,6 +84,7 @@ const Comment = mongoose.model('Comment',CommentSchema);
 const LikeComment = mongoose.model('LikeComment',LikeCommentSchema);
 const LikePost = mongoose.model('LikePost',LikePostSchema);
 const Album = mongoose.model('Album', AlbumSchema )
+const Image = mongoose.model('Image', imageSchema )
 export {
     User,
     Group,
@@ -89,5 +92,6 @@ export {
     Comment,
     LikeComment,
     LikePost,
-    Album
+    Album,
+    Image
 }
