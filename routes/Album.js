@@ -18,6 +18,7 @@ albumRouter.get('/find',async(req,res)=>{
 })
 
 albumRouter.get('/findall',async (req,res)=>{
+    
     await Album.find({}, (err,album)=>{
         if (err) { 
             console.log(err)
@@ -55,6 +56,28 @@ albumRouter.post('/insert', async(req,res) => {
         console.log(err)
     }
 
+})
+
+albumRouter.put('/deleteImage', async(req,res)=>{
+    if( !req.user ){
+        return res.status(204).send({success: false})
+    }
+    const user = req.user
+
+    try{
+        const album = await Album.findById({_id: user.album})
+
+        req.body.image.map( img => {
+             album.image.id(img._id).remove();
+        })
+        await album.save(function (err) {
+            if (err) return handleError(err);
+            console.log('the subdocs were removed');
+          });
+        return res.status(200).json({success: true})
+    }catch(err){
+        console.log(err);
+    }
 })
 
 export default albumRouter;
