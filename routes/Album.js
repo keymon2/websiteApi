@@ -36,6 +36,8 @@ albumRouter.post('/insert', async(req,res) => {
     try{
         const album = await Album.findById({_id: user.album })
         const image = req.body.image
+        if(!image)return res.send(204).json({success: fail})
+        
         image.map( img => 
             album.image.push(new Image({
                 src: img.src,
