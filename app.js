@@ -6,6 +6,9 @@ import morgan from 'morgan'
 import passport from 'passport'
 import {authenticateJwt} from "./secret.js"
 import cors from "cors"
+import {Server} from "socket.io"
+import {createServer} from "http"
+
 const app = express();
 
 //import { options ,swaggerUi,swaggerJsdoc } from './swaggerDoc.js'
@@ -20,9 +23,6 @@ import apiRouter from './routes/root.js'
 
 app.use('/api', apiRouter);
 
-
-
-
 // CONNECT TO MONGODB SERVER
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection;
@@ -32,3 +32,26 @@ db.once('open', function(){
     console.log("Connected to mongod server");
 });
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+
+
+
+// connect socket io
+const httpServer = createServer();
+// const cors = require('cors')
+const io = new Server(httpServer,{
+    cors : {
+        origin :"*",
+        credentials :true
+    }
+});
+
+
+io.on('connection', socket=>{
+    socket.on('message',({name,message}) => {
+        io.emit('message',({name, message}))
+    })
+})
+
+httpServer.listen(4000, function(){
+    console.log('listening on port 4000');
+})
